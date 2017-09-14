@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ExitFade : MonoBehaviour
 {
-	// Modified
+	// New
 	private void OnApplicationQuit()
 	{
 		string[] contents = new string[]

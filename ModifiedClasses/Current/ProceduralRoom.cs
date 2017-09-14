@@ -115,20 +115,6 @@ public class ProceduralRoom : MonoBehaviour
 		ProceduralRoom.respawnInLava = false;
 	}
 
-	private int RoomCounterToLevelID()
-	{
-		int num = ProceduralRoom.roomCounter;
-		for (int i = 0; i < this.currentLevelSequence.levelCount.Count; i++)
-		{
-			if (num < this.currentLevelSequence.levelCount[i])
-			{
-				return i;
-			}
-			num -= this.currentLevelSequence.levelCount[i];
-		}
-		return this.currentLevelSequence.levelCount.Count - 1;
-	}
-
     // Modified
 	private void Start()
 	{

@@ -23,58 +23,12 @@ public class Globals : MonoBehaviour
 	// Modified
 	private void Update()
 	{
-		if (Globals.currentRoom != null)
-		{
-			if (NewMenu.cheatsEnabled && Input.GetKeyDown(KeyCode.N))
-			{
-				Globals.currentRoom.CheatRoomComplete();
-			}
-			switch (Globals.currentRoom.GetRoomState())
-			{
-			case Room.MyState.slicingIn:
-				if (!Globals.loadlessTimer.IsRunning)
-				{
-					Globals.loadlessTimer.Start();
-				}
-				break;
-			case Room.MyState.ready:
-				if (Globals.realTimeTimer == null)
-				{
-					Globals.realTimeTimer = Stopwatch.StartNew();
-					Globals.loadlessTimer = Stopwatch.StartNew();
-					Globals.inGameTime = Stopwatch.StartNew();
-				}
-				else if (!Globals.inGameTime.IsRunning)
-				{
-					Globals.inGameTime.Start();
-				}
-				break;
-			case Room.MyState.slicingOut:
-				if (Globals.inGameTime.IsRunning)
-				{
-					Globals.inGameTime.Stop();
-				}
-				if (Globals.currentGlobalRoomID == 63 || (Globals.currentLevelID == 17 && ProceduralRoom.roomCounter == ProceduralRoom.roomCounterTarget && Globals.realTimeTimer.IsRunning))
-				{
-					Globals.realTimeTimer.Stop();
-					Globals.loadlessTimer.Stop();
-				}
-				Globals.prevRoomTime = Globals.inGameTime.Elapsed.Subtract(Room.roomStartedTime);
-				break;
-			case Room.MyState.loading:
-				if (Globals.loadlessTimer.IsRunning)
-				{
-					Globals.loadlessTimer.Stop();
-				}
-				break;
-			}
-		}
 		if ((Globals.currentLevelID == 16 || Globals.currentLevelID == 18 || Globals.currentLevelID == 19 || (Globals.currentLevelID == 17 && ProceduralRoom.roomCounter == ProceduralRoom.roomCounterTarget)) && Input.GetKeyDown(KeyCode.Escape))
-		{
-			SceneManager.LoadScene("NewMenu");
-			GeneralSoundBank.GetInstance().StopEndTheme();
-			Globals.currentLevelID = -1;
-		}
+        {
+            SceneManager.LoadScene("NewMenu");
+            GeneralSoundBank.GetInstance().StopEndTheme();
+            Globals.currentLevelID = -1;
+        }
 	}
 
     // New

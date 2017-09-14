@@ -1,2 +1,6 @@
-[^.]*
-!README.md
+*.dll
+*.txt
+*.rar
+
+!Assembly-CSharp-Current-Latest.dll
+!Assembly-CSharp-Legacy-Latest.dll

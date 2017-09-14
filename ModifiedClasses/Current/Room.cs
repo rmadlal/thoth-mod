@@ -51,6 +51,24 @@ public class Room : MonoBehaviour
     // Modified
 	private void SetReadyEventsAndState()
 	{
+        if (Globals.inGameTime == null)
+        {
+            Room.roomStartedTime = TimeSpan.Zero;
+        }
+        else if (!Room.anotherChance || Globals.lavaAlwaysOn)
+        {
+            Room.roomStartedTime = Globals.inGameTime.Elapsed;
+        }
+        if (Globals.realTimeTimer == null)
+        {
+            Globals.realTimeTimer = Stopwatch.StartNew();
+            Globals.loadlessTimer = Stopwatch.StartNew();
+            Globals.inGameTime = Stopwatch.StartNew();
+        }
+        else
+        {
+            Globals.inGameTime.Start();
+        }
 		if (this.doPlayFlowerSound)
 		{
 			this.doPlayFlowerSound = false;
@@ -58,14 +76,6 @@ public class Room : MonoBehaviour
 		}
 		this.myState = Room.MyState.ready;
 		this.roomTimer = 0f;
-		if (Globals.inGameTime == null)
-		{
-			Room.roomStartedTime = TimeSpan.Zero;
-		}
-		else if (!Room.anotherChance || Globals.lavaAlwaysOn)
-		{
-			Room.roomStartedTime = Globals.inGameTime.Elapsed;
-		}
 		this.roomReady = true;
 		this.playersAreActive = true;
 		if (this.roomPlayersActiveEvent != null)
@@ -99,12 +109,58 @@ public class Room : MonoBehaviour
 	}
 
     // Modified
+    private void SetSliceInState()
+    {
+        if (Room.doSlideAtStart)
+        {
+            Globals.loadlessTimer.Start();
+            this.roomTimer = -0f;
+            this.myState = Room.MyState.slicingIn;
+            this.walls0StartPos = this.wallsToColor[0].transform.position;
+            if (!this.wallsToColor[0].gameObject.activeSelf)
+            {
+                this.wallsToColor[0].gameObject.SetActive(true);
+                this.disableWall0WhenSlideDone = true;
+            }
+            this.wallsToColor[0].transform.position = Vector3.zero + Vector3.back * 10f;
+            this.wallsToColor[0].GetComponent<Collider>().isTrigger = true;
+            for (int i = 1; i < this.wallsToColor.Count; i++)
+            {
+                this.wallsToColor[i].GetComponent<Renderer>().enabled = false;
+            }
+            Globals.player.gameObject.SetActive(false);
+            if (Room.coopRoom)
+            {
+                Globals.player2.gameObject.SetActive(false);
+            }
+            Globals.roomNumbers.SlideNumber();
+            if (GeneralSoundBank.GetInstance())
+            {
+                GeneralSoundBank.GetInstance().PlayLevelComplete(this.roomID);
+            }
+            this.numberSlideActive = true;
+            return;
+        }
+        this.SetReadyWhenReadySate();
+    }
+
+    // Modified
 	private void SetSliceOutState()
 	{
-		if (!Globals.lavaAlwaysOn)
-		{
-			Room.anotherChance = false;
-		}
+        Globals.inGameTime.Stop();
+        if (!Globals.cheatRepeatLevel && (Globals.currentGlobalRoomID == 63 || (Globals.currentLevelID == 17 && ProceduralRoom.roomCounter == ProceduralRoom.roomCounterTarget)))
+        {
+            Globals.realTimeTimer.Stop();
+            Globals.loadlessTimer.Stop();
+        }
+        if (!Globals.lavaAlwaysOn)
+        {
+            Room.anotherChance = false;
+        }
+        if (!Room.anotherChance || Globals.lavaAlwaysOn)
+        {
+            Globals.prevRoomTime = Globals.inGameTime.Elapsed.Subtract(Room.roomStartedTime);
+        }
 		if (Globals.cheatRepeatLevel)
 		{
 			this.transitionToStars = false;
@@ -170,9 +226,11 @@ public class Room : MonoBehaviour
 		}
 		if (Globals.cheatRepeatLevel)
 		{
-			SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-			this.myState = Room.MyState.loading;
-			return;
+            GC.Collect();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            this.myState = Room.MyState.loading;
+            Globals.loadlessTimer.Stop();
+            return;
 		}
 		if ((this.roomID != 4 && Globals.roomNumbersExtra.GetIsCompleted()) || (this.roomID == 4 && Globals.roomNumbersExtra.GetIsCompleted() && this.roomTimer > num))
 		{
@@ -183,6 +241,7 @@ public class Room : MonoBehaviour
 				{
 					SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 					this.myState = Room.MyState.loading;
+                    Globals.loadlessTimer.Stop();
 					return;
 				}
 				Globals.currentLevelID++;
@@ -206,6 +265,7 @@ public class Room : MonoBehaviour
 					SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 				}
 				this.myState = Room.MyState.loading;
+                Globals.loadlessTimer.Stop();
 				return;
 			}
 			else
@@ -248,6 +308,7 @@ public class Room : MonoBehaviour
 						SceneManager.LoadScene("Final4-ENDINGHARDCORE");
 					}
 					this.myState = Room.MyState.loading;
+                    Globals.loadlessTimer.Stop();
 					return;
 				}
 				if (this.roomID == 4 && Globals.currentLevelID != 15)
@@ -284,6 +345,7 @@ public class Room : MonoBehaviour
 					SceneManager.LoadScene(Globals.currentLevelName + "-" + this.nextRoomID);
 				}
 				this.myState = Room.MyState.loading;
+                Globals.loadlessTimer.Stop();
 			}
 		}
 	}
@@ -295,7 +357,11 @@ public class Room : MonoBehaviour
 		{
 			Globals.showRealTimeAndILTime = !Globals.showRealTimeAndILTime;
 		}
-		if (Globals.currentGlobalRoomID == 63 && this.myState == Room.MyState.slicingOut && Input.GetKeyDown(KeyCode.Escape))
+        else if (NewMenu.cheatsEnabled && Input.GetKeyDown(KeyCode.N))
+        {
+            Globals.currentRoom.CheatRoomComplete();
+        }
+		else if (Globals.currentGlobalRoomID == 63 && this.myState == Room.MyState.slicingOut && Input.GetKeyDown(KeyCode.Escape))
 		{
 			SceneManager.LoadScene("NewMenu");
 			GeneralSoundBank.GetInstance().StopEndTheme();
@@ -304,21 +370,6 @@ public class Room : MonoBehaviour
 		if (this.gameover)
 		{
 			this.UpdateGameOver();
-		}
-	}
-
-	private void BuildHitBoxList()
-	{
-		this.buildHitBoxList = false;
-		this.hitBoxes = new HitBox[this.receivers.Count + this.shadowBouncers.Count];
-		for (int i = 0; i < this.receivers.Count; i++)
-		{
-			this.hitBoxes[i] = this.receivers[i].myCollider.GetComponent<HitBox>();
-		}
-		int count = this.receivers.Count;
-		for (int j = 0; j < this.shadowBouncers.Count; j++)
-		{
-			this.hitBoxes[j + count] = this.shadowBouncers[j].myCollider.GetComponent<HitBox>();
 		}
 	}
 
