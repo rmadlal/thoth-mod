@@ -35,61 +35,60 @@ public class Globals : MonoBehaviour
 	private void OnGUI()
 	{
 		if (NewMenu.cheatsEnabled)
-		{
-			GUI.Label(new Rect((float)(Screen.width / 2) - 110f, 10f, 200f, 200f), "CHEATS ENABLED", Globals.timerGUIStyle);
-		}
-		if (Globals.showRoomDebugInfo)
-		{
-			GUI.Label(new Rect(10f, 60f, 200f, 200f), string.Format("currentRoom: {0}, currentGlobalRoomID: {1}, currentLevelID: {2}, currentSceneName: {3}, room state: {4}, timer diff: {5}", new object[]
-			{
-				(Globals.currentRoom != null) ? string.Concat(Globals.currentRoom) : "",
-				string.Concat(Globals.currentGlobalRoomID),
-				string.Concat(Globals.currentLevelID),
-				(Globals.currentLevelName != null) ? SceneManager.GetActiveScene().name : "",
-				(Globals.currentRoom != null) ? string.Concat(Globals.currentRoom.GetRoomState()) : "",
-				(Globals.realTimeTimer != null) ? Globals.realTimeTimer.Elapsed.Subtract(Globals.loadlessTimer.Elapsed).ToString() : ""
-			}));
-		}
-		if (Globals.loadlessTimer != null)
-		{
-			TimeSpan elapsed = Globals.loadlessTimer.Elapsed;
-			TimeSpan elapsed2 = Globals.realTimeTimer.Elapsed;
-			GUI.Label(new Rect(10f, 10f, 150f, 100f), string.Format("{0:00}:{1:00}:{2:00}.{3:000}", new object[]
-			{
-				elapsed.Hours,
-				elapsed.Minutes,
-				elapsed.Seconds,
-				elapsed.Milliseconds
-			}), Globals.timerGUIStyle);
-			GUI.Label(new Rect(10f, 35f, 150f, 100f), string.Format("{0:00}:{1:00}:{2:00}.{3:000}", new object[]
-			{
-				elapsed2.Hours,
-				elapsed2.Minutes,
-				elapsed2.Seconds,
-				elapsed2.Milliseconds
-			}), Globals.timerGUIStyle);
-			if (Globals.showRealTimeAndILTime)
-			{
-				TimeSpan elapsed3 = Globals.inGameTime.Elapsed;
-				GUI.Label(new Rect((float)Screen.width - 150f, 10f, 150f, 100f), string.Format("{0:00}:{1:00}.{2:000}", new object[]
-				{
-					elapsed3.Minutes,
-					elapsed3.Seconds,
-					elapsed3.Milliseconds
-				}), Globals.timerGUIStyle);
-				GUI.Label(new Rect((float)Screen.width - 150f, 35f, 150f, 100f), string.Format("{0:00}:{1:00}.{2:000}", new object[]
-				{
-					Globals.prevRoomTime.Minutes,
-					Globals.prevRoomTime.Seconds,
-					Globals.prevRoomTime.Milliseconds
-				}), Globals.timerGUIStyle);
-			}
-		}
+        {
+            Globals.timerGUIStyle.fontSize = 32;
+            Globals.timerGUIStyle.alignment = TextAnchor.UpperCenter;
+            GUI.Label(new Rect((float)(Screen.width / 2) - 100f, 10f, 200f, 200f), "CHEATS ENABLED", Globals.timerGUIStyle);
+        }
+        Globals.timerGUIStyle.fontSize = 24;
+        if (Globals.showRoomDebugInfo)
+        {
+            GUI.Label(new Rect(10f, 60f, 200f, 200f), string.Format("currentRoom: {0}, currentGlobalRoomID: {1}, currentLevelID: {2}, currentSceneName: {3}, room state: {4}, timer diff: {5}", new object[]
+            {
+                (Globals.currentRoom != null) ? string.Concat(Globals.currentRoom) : "",
+                string.Concat(Globals.currentGlobalRoomID),
+                string.Concat(Globals.currentLevelID),
+                (Globals.currentLevelName != null) ? SceneManager.GetActiveScene().name : "",
+                (Globals.currentRoom != null) ? string.Concat(Globals.currentRoom.GetRoomState()) : "",
+                (Globals.realTimeTimer != null) ? Globals.realTimeTimer.Elapsed.Subtract(Globals.loadlessTimer.Elapsed).ToString() : ""
+            }));
+        }
+        if (Globals.loadlessTimer != null)
+        {
+            Globals.timerGUIStyle.alignment = TextAnchor.UpperLeft;
+            GUI.Label(new Rect(10f, 10f, 150f, 100f), Globals.FormatTime(Globals.loadlessTimer.Elapsed), Globals.timerGUIStyle);
+            GUI.Label(new Rect(10f, 35f, 150f, 100f), Globals.FormatTime(Globals.realTimeTimer.Elapsed), Globals.timerGUIStyle);
+            if (Globals.showRealTimeAndILTime)
+            {
+                Globals.timerGUIStyle.alignment = TextAnchor.UpperRight;
+                GUI.Label(new Rect((float)Screen.width - 160f, 10f, 150f, 100f), Globals.FormatTime(Globals.inGameTime.Elapsed), Globals.timerGUIStyle);
+                GUI.Label(new Rect((float)Screen.width - 160f, 35f, 150f, 100f), Globals.FormatTime(Globals.prevRoomTime), Globals.timerGUIStyle);
+            }
+        }
 	}
 
     // New
+    public static string FormatTime(TimeSpan ts)
+    {
+        int millis = (ts.Milliseconds >= 100) ? (ts.Milliseconds / 10) : ts.Milliseconds;
+        if (ts.Hours > 0)
+        {
+            return string.Format("{0}:{1:00}:{2:00}.{3:00}",
+                ts.Hours,
+                ts.Minutes,
+                ts.Seconds,
+                millis);
+        }
+        if (ts.Minutes > 0)
+        {
+            return string.Format("{0}:{1:00}.{2:00}", ts.Minutes, ts.Seconds, millis);
+        }
+        return string.Format("{0}.{1:00}", ts.Seconds, millis);
+    }
+
+    // New
 	public static Stopwatch inGameTime;
-    
+
     // New
 	public static TimeSpan prevRoomTime;
 
