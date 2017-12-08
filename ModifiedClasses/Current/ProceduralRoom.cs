@@ -52,6 +52,7 @@ public class ProceduralRoom : MonoBehaviour
 		{
 			Room.anotherChance = true;
 		}
+        // from here unchanged
 		if (ProceduralRoom.roomCounter == 0)
 		{
 			BuildProcEndingData.ClearData();
@@ -118,10 +119,11 @@ public class ProceduralRoom : MonoBehaviour
     // Modified
 	private void Start()
 	{
-		Room expr_05 = Globals.currentRoom;
-		expr_05.gameoverEvent = (Room.RoomEvent)Delegate.Combine(expr_05.gameoverEvent, new Room.RoomEvent(this.OnGameOver));
-		Room expr_2B = Globals.currentRoom;
-		expr_2B.roomCompletedEvent = (Room.RoomEvent)Delegate.Combine(expr_2B.roomCompletedEvent, new Room.RoomEvent(this.OnRoomCompleted));
+        // change at end of function
+		Room currentRoom = Globals.currentRoom;
+		currentRoom.gameoverEvent = (Room.RoomEvent)Delegate.Combine(currentRoom.gameoverEvent, new Room.RoomEvent(this.OnGameOver));
+		Room currentRoom2 = Globals.currentRoom;
+		currentRoom2.roomCompletedEvent = (Room.RoomEvent)Delegate.Combine(currentRoom2.roomCompletedEvent, new Room.RoomEvent(this.OnRoomCompleted));
 		Vector3 position = this.activePattern.player1Start.position;
 		if (Room.coopRoom)
 		{

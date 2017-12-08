@@ -27,7 +27,7 @@ Press T to toggle additional IL timers at the top-right: in-game timer and previ
 | Key Combo | Effect |
 | :---: | --- |
 | `c` `h` `e` `a` `t` | Enable cheats and unlock all levels. |
-| `01`-`64` | Warp to the specified level
+| `01`-`64` (Numpad) | Warp to the specified level
 | `Alt` + `C` | Toggle checkpoint cheat |
 | `Alt` + `R` | Toggle repeating level cheat |
 | `Alt` + `L` | Toggle lava always on cheat [*] |

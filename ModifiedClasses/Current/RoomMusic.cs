@@ -23,7 +23,8 @@ public class RoomMusic : MonoBehaviour
 		if (Globals.currentRoom)
 		{
 			if (!this.musicChanged && Globals.currentRoom.IsRoomCompleted() && ((Globals.currentRoom.roomID == 4 && !Globals.cheatRepeatLevel) || (Globals.currentRoom.roomID < 0 && ProceduralRoom.roomCounter == ProceduralRoom.roomCounterTarget)))
-			{
+			// from here unchanged
+            {
 				if (Globals.currentRoom.roomID >= 0)
 				{
 					this.musicList[Globals.currentLevelID].StopTrack(1f);

@@ -34,50 +34,49 @@ public class DeathSwipeManager : MonoBehaviour
 					}
 					GC.Collect();
 					SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-					return;
 				}
-				if (!NewMenu.cheatsEnabled || !Globals.lavaAlwaysOn)
-				{
-					Room.anotherChance = false;
-				}
-				Globals.currentLevelID = 0;
-				Globals.currentGlobalRoomID = 0;
-				Globals.currentLevelName = "Basic";
-				RoomMusic.GetInstance().StartRoomSound();
-				GC.Collect();
-				SceneManager.LoadScene("Basic-1-HARDCORE");
-				return;
+                else
+                {
+                    if (!NewMenu.cheatsEnabled || !Globals.lavaAlwaysOn)
+                    {
+                        Room.anotherChance = false;
+                    }
+                    Globals.currentLevelID = 0;
+                    Globals.currentGlobalRoomID = 0;
+                    Globals.currentLevelName = "Basic";
+                    RoomMusic.GetInstance().StartRoomSound();
+                    GC.Collect();
+                    SceneManager.LoadScene("Basic-1-HARDCORE");
+                }
 			}
-			else
-			{
-				if (!Room.anotherChance)
-				{
-					if (Globals.currentRoom.roomID == 1 && Globals.currentLevelID == 8)
-					{
-						Room.anotherChance = false;
-					}
-					else
-					{
-						Room.anotherChance = true;
-						DeathSwipeManager.playLavaEnableSound = true;
-					}
-					GC.Collect();
-					SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-					return;
-				}
-				if (!NewMenu.cheatsEnabled || !Globals.lavaAlwaysOn)
-				{
-					Room.anotherChance = false;
-				}
-				Globals.currentLevelID = 8;
-				Globals.currentGlobalRoomID = 32;
-				Globals.currentLevelName = "Scalers";
-				RoomMusic.GetInstance().StartRoomSound();
-				this.deathFinished = true;
-				GC.Collect();
-				SceneManager.LoadScene("Scalers-1-HARDCORE");
-				return;
-			}
+			else if (!Room.anotherChance)
+            {
+                if (Globals.currentRoom.roomID == 1 && Globals.currentLevelID == 8)
+                {
+                    Room.anotherChance = false;
+                }
+                else
+                {
+                    Room.anotherChance = true;
+                    DeathSwipeManager.playLavaEnableSound = true;
+                }
+                GC.Collect();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+            else
+            {
+                if (!NewMenu.cheatsEnabled || !Globals.lavaAlwaysOn)
+                {
+                    Room.anotherChance = false;
+                }
+                Globals.currentLevelID = 8;
+                Globals.currentGlobalRoomID = 32;
+                Globals.currentLevelName = "Scalers";
+                RoomMusic.GetInstance().StartRoomSound();
+                this.deathFinished = true;
+                GC.Collect();
+                SceneManager.LoadScene("Scalers-1-HARDCORE");
+            }
 		}
 		else
 		{
@@ -90,14 +89,12 @@ public class DeathSwipeManager : MonoBehaviour
 			if (Globals.currentRoom.roomID < 0)
 			{
 				SceneManager.LoadScene("Procedural-1");
-				return;
 			}
-			if (Globals.currentLevelName == string.Empty)
+			else if (Globals.currentLevelName == string.Empty)
 			{
 				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-				return;
 			}
-			if (!Room.anotherChance)
+			else if (!Room.anotherChance)
 			{
 				if (Globals.currentRoom.roomID == 1)
 				{
@@ -109,14 +106,15 @@ public class DeathSwipeManager : MonoBehaviour
 					DeathSwipeManager.playLavaEnableSound = true;
 				}
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-				return;
 			}
-			if (!NewMenu.cheatsEnabled || !Globals.lavaAlwaysOn)
+			else
 			{
-				Room.anotherChance = false;
-			}
-			SceneManager.LoadScene(Globals.currentLevelName + "-1");
-			return;
+                if (!NewMenu.cheatsEnabled || !Globals.lavaAlwaysOn)
+                {
+                    Room.anotherChance = false;
+                }
+                SceneManager.LoadScene(Globals.currentLevelName + "-1");
+            }
 		}
 	}
 }

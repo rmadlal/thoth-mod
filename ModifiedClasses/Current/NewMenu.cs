@@ -61,6 +61,7 @@ public class NewMenu : MonoBehaviour
 			7,
 			3
 		};
+        // from here unchanged
 		if (Room.coopRoom)
 		{
 			this.EnableCoop();
@@ -147,6 +148,7 @@ public class NewMenu : MonoBehaviour
     // Modified
 	private void UpdateChooseLevel()
 	{
+        // change at the end of the function
 		if (LoadSoundBank.TrailsBank == null)
 		{
 			return;
@@ -268,6 +270,7 @@ public class NewMenu : MonoBehaviour
     // Modified
 	private void Update()
 	{
+        // change at end of function
 		if (this.loadingLevel)
 		{
 			return;
