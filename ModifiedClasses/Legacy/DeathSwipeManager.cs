@@ -18,6 +18,7 @@ public class DeathSwipeManager : MonoBehaviour
 			Globals.warpedIntoRoom = true;
 			return;
 		}
+        // from here unchanged
 		if (Globals.currentRoom.roomID < 0)
 		{
 			this.skipTransitionActive = true;
@@ -62,16 +63,17 @@ public class DeathSwipeManager : MonoBehaviour
 				RoomMusic.GetInstance().StartRoomSound();
 				GC.Collect();
 				SceneManager.LoadScene("Basic-1-HARDCORE");
-				return;
 			}
-			Globals.currentLevelID = 8;
-			Globals.currentGlobalRoomID = 32;
-			Globals.currentLevelName = "Scalers";
-			RoomMusic.GetInstance().StartRoomSound();
-			this.deathFinished = true;
-			GC.Collect();
-			SceneManager.LoadScene("Scalers-1-HARDCORE");
-			return;
+            else
+            {
+                Globals.currentLevelID = 8;
+                Globals.currentGlobalRoomID = 32;
+                Globals.currentLevelName = "Scalers";
+                RoomMusic.GetInstance().StartRoomSound();
+                this.deathFinished = true;
+                GC.Collect();
+                SceneManager.LoadScene("Scalers-1-HARDCORE");
+            }
 		}
 		else
 		{
@@ -84,15 +86,15 @@ public class DeathSwipeManager : MonoBehaviour
 			if (Globals.currentRoom.roomID < 0)
 			{
 				SceneManager.LoadScene("Procedural-1");
-				return;
 			}
-			if (Globals.currentLevelName == string.Empty || DeathSwipeManager.checkpointCheat)
+			else if (Globals.currentLevelName == string.Empty || DeathSwipeManager.checkpointCheat)
 			{
 				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-				return;
 			}
+            else
+            {
 			SceneManager.LoadScene(Globals.currentLevelName + "-1");
-			return;
+			}
 		}
 	}
 

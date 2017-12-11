@@ -7,8 +7,9 @@ public class ProceduralRoom : MonoBehaviour
 	// Modified
 	private void Start()
 	{
-		Room expr_05 = Globals.currentRoom;
-		expr_05.gameoverEvent = (Room.RoomEvent)Delegate.Combine(expr_05.gameoverEvent, new Room.RoomEvent(this.OnGameOver));
+        // change at end of function
+		Room currentRoom = Globals.currentRoom;
+		currentRoom.gameoverEvent = (Room.RoomEvent)Delegate.Combine(currentRoom.gameoverEvent, new Room.RoomEvent(this.OnGameOver));
 		Vector3 position = this.activePattern.player1Start.position;
 		if (Room.coopRoom)
 		{

@@ -9,7 +9,7 @@ public class Room : MonoBehaviour
 	// Modified
 	private void OnDestroy()
 	{
-		if (BossMusic.GetInstance() && !NewMenu.repeatLevel && !DeathSwipeManager.checkpointCheat)
+		if (BossMusic.GetInstance() && ((this.roomCompleted && !NewMenu.repeatLevel) || (this.gameover && !DeathSwipeManager.checkpointCheat)))
 		{
 			BossMusic.GetInstance().StopBossMusic(true);
 		}
@@ -21,6 +21,7 @@ public class Room : MonoBehaviour
 		if (Room.doSlideAtStart)
 		{
 			Globals.loadlessTimer.Start();
+            // from here unchanged
 			this.roomTimer = -0f;
 			this.myState = Room.MyState.slicingIn;
 			this.walls0StartPos = this.wallsToColor[0].transform.position;
@@ -69,6 +70,7 @@ public class Room : MonoBehaviour
 					BossMusic.GetInstance().PlayBossMusic();
 				}
 			}
+            // from here unchanged
 			this.SetReadyState();
 			this.wallsToColor[0].transform.position = this.walls0StartPos;
 			this.wallsToColor[0].GetComponent<Collider>().isTrigger = false;
@@ -84,12 +86,12 @@ public class Room : MonoBehaviour
 				}
 				if (HardcoreArena.hardcoreModeActive && i > 3)
 				{
-					GameObject expr_118 = UnityEngine.Object.Instantiate<GameObject>(this.wallsToColor[i].gameObject);
-					expr_118.transform.parent = this.wallsToColor[i].transform.parent;
-					expr_118.GetComponent<Renderer>().material = Globals.instance.overlapMaterial;
-					expr_118.layer = LayerMask.NameToLayer("Overlap");
-					expr_118.transform.localScale = this.wallsToColor[i].transform.localScale;
-					expr_118.transform.position = this.wallsToColor[i].transform.position;
+					GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(this.wallsToColor[i].gameObject);
+					gameObject.transform.parent = this.wallsToColor[i].transform.parent;
+					gameObject.GetComponent<Renderer>().material = Globals.instance.overlapMaterial;
+					gameObject.layer = LayerMask.NameToLayer("Overlap");
+					gameObject.transform.localScale = this.wallsToColor[i].transform.localScale;
+					gameObject.transform.position = this.wallsToColor[i].transform.position;
 					this.wallsToColor[i].enabled = false;
 					this.wallsToColor[i].gameObject.AddComponent<Killer>();
 					this.wallsToColor[i].GetComponent<Collider>().isTrigger = true;
@@ -121,12 +123,12 @@ public class Room : MonoBehaviour
 				if (HardcoreArena.hardcoreModeActive && i > 3 && !this.transitionToStars)
 				{
 					this.wallsToColor[i].GetComponent<Renderer>().enabled = true;
-					GameObject expr_72 = UnityEngine.Object.Instantiate<GameObject>(this.wallsToColor[i].gameObject);
-					expr_72.transform.parent = this.wallsToColor[i].transform.parent;
-					expr_72.GetComponent<Renderer>().material = Globals.instance.overlapMaterial;
-					expr_72.layer = LayerMask.NameToLayer("Overlap");
-					expr_72.transform.localScale = this.wallsToColor[i].transform.localScale;
-					expr_72.transform.position = this.wallsToColor[i].transform.position;
+					GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(this.wallsToColor[i].gameObject);
+					gameObject.transform.parent = this.wallsToColor[i].transform.parent;
+					gameObject.GetComponent<Renderer>().material = Globals.instance.overlapMaterial;
+					gameObject.layer = LayerMask.NameToLayer("Overlap");
+					gameObject.transform.localScale = this.wallsToColor[i].transform.localScale;
+					gameObject.transform.position = this.wallsToColor[i].transform.position;
 					this.wallsToColor[i].material.color = Globals.instance.levelEnemyMaterials[Globals.currentLevelID].color;
 					this.wallsToColor[i].enabled = true;
 					this.wallsToColor[i].gameObject.AddComponent<Killer>();
@@ -152,6 +154,7 @@ public class Room : MonoBehaviour
 		{
 			Globals.inGameTime.Start();
 		}
+        // from here unchanged
 		if (this.doPlayFlowerSound)
 		{
 			this.doPlayFlowerSound = false;
@@ -180,11 +183,11 @@ public class Room : MonoBehaviour
 		{
 			this.roomIDHided = true;
 		}
-		if (this.AllIsOn)AllIsOn)
+		if (this.set_AllIsOn)
 		{
 			this.allIsOn = true;
 		}
-		this.AllIsOn =  = this.receiversOnCounter == this.receivers.Count + this.extraHits;
+		this.set_AllIsOn = (this.receiversOnCounter == this.receivers.Count + this.extraHits);
 		if (Globals.warpedIntoRoom)
 		{
 			this.SetReadyState();
@@ -196,12 +199,12 @@ public class Room : MonoBehaviour
 				}
 				if (HardcoreArena.hardcoreModeActive && i > 3)
 				{
-					GameObject expr_C8 = UnityEngine.Object.Instantiate<GameObject>(this.wallsToColor[i].gameObject);
-					expr_C8.transform.parent = this.wallsToColor[i].transform.parent;
-					expr_C8.GetComponent<Renderer>().material = Globals.instance.overlapMaterial;
-					expr_C8.layer = LayerMask.NameToLayer("Overlap");
-					expr_C8.transform.localScale = this.wallsToColor[i].transform.localScale;
-					expr_C8.transform.position = this.wallsToColor[i].transform.position;
+					GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(this.wallsToColor[i].gameObject);
+					gameObject.transform.parent = this.wallsToColor[i].transform.parent;
+					gameObject.GetComponent<Renderer>().material = Globals.instance.overlapMaterial;
+					gameObject.layer = LayerMask.NameToLayer("Overlap");
+					gameObject.transform.localScale = this.wallsToColor[i].transform.localScale;
+					gameObject.transform.position = this.wallsToColor[i].transform.position;
 					this.wallsToColor[i].enabled = false;
 					this.wallsToColor[i].gameObject.AddComponent<Killer>();
 					this.wallsToColor[i].GetComponent<Collider>().isTrigger = true;
@@ -261,6 +264,7 @@ public class Room : MonoBehaviour
 		}
 		if (BossMusic.GetInstance() && !NewMenu.repeatLevel)
 		{
+            // from here unchanged
 			BossMusic.GetInstance().StopBossMusic(false);
 			if (this.roomID == 3 && !this.endOfTrailer)
 			{
@@ -328,112 +332,111 @@ public class Room : MonoBehaviour
 					SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 					this.myState = Room.MyState.loading;
 					Globals.loadlessTimer.Stop();
-					return;
 				}
-				Globals.currentLevelID++;
-				if (!NewMenu.cheatsEnabled && Globals.save_progress < Globals.currentLevelID)
-				{
-					Globals.save_progress = Globals.currentLevelID;
-					SaveLoad.Save();
-				}
-				ProceduralRoom.lastAssignedSpecial = ProceduralRoom.SpecialTypes.none;
-				ProceduralRoom.roomCounter = 0;
-				if (Globals.currentLevelID == 17)
-				{
-					SceneManager.LoadScene("Procedural-ENDING1");
-				}
-				else if (Globals.currentLevelID == 18)
-				{
-					SceneManager.LoadScene("Proc-FINALENDING");
-				}
-				else
-				{
-					SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-				}
-				this.myState = Room.MyState.loading;
-				Globals.loadlessTimer.Stop();
-				return;
+                else
+                {
+                    Globals.currentLevelID++;
+                    if (!NewMenu.cheatsEnabled && Globals.save_progress < Globals.currentLevelID)
+                    {
+                        Globals.save_progress = Globals.currentLevelID;
+                        SaveLoad.Save();
+                    }
+                    ProceduralRoom.lastAssignedSpecial = ProceduralRoom.SpecialTypes.none;
+                    ProceduralRoom.roomCounter = 0;
+                    if (Globals.currentLevelID == 17)
+                    {
+                        SceneManager.LoadScene("Procedural-ENDING1");
+                    }
+                    else if (Globals.currentLevelID == 18)
+                    {
+                        SceneManager.LoadScene("Proc-FINALENDING");
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                    }
+                    this.myState = Room.MyState.loading;
+                    Globals.loadlessTimer.Stop();
+                }
+                return;
 			}
-			else
-			{
-				if (HardcoreArena.hardcoreModeActive && Globals.currentLevelID == 7 && this.roomID == 4)
-				{
-					UnityEngine.Debug.Log("Unlocked final lava challenge");
-					if (!NewMenu.cheatsEnabled && Globals.save_progress < 20)
-					{
-						Globals.save_progress = 20;
-						SaveLoad.Save();
-					}
-				}
-				else if (HardcoreArena.hardcoreModeActive && Globals.currentLevelID == 15 && this.roomID == 4)
-				{
-					UnityEngine.Debug.Log("Completed final challenge");
-					if (!NewMenu.cheatsEnabled && Globals.save_progress < 21)
-					{
-						Globals.save_progress = 21;
-						SaveLoad.Save();
-					}
-				}
-				Globals.currentGlobalRoomID++;
-				this.nextRoomID = this.roomID + 1;
-				if (Globals.currentLevelID == 15 && this.roomID == 4)
-				{
-					Globals.currentLevelID++;
-					if (!NewMenu.cheatsEnabled && Globals.save_progress < Globals.currentLevelID)
-					{
-						Globals.save_progress = Globals.currentLevelID;
-						SaveLoad.Save();
-					}
-					if (!this.nextRoomHasHardcoreVersion)
-					{
-						SceneManager.LoadScene("Final4-ENDING");
-					}
-					else
-					{
-						Globals.currentLevelID = 19;
-						SceneManager.LoadScene("Final4-ENDINGHARDCORE");
-					}
-					this.myState = Room.MyState.loading;
-					Globals.loadlessTimer.Stop();
-					return;
-				}
-				if (this.roomID == 4 && Globals.currentLevelID != 15)
-				{
-					Globals.currentLevelID++;
-					if (!NewMenu.cheatsEnabled && Globals.save_progress < Globals.currentLevelID)
-					{
-						Globals.save_progress = Globals.currentLevelID;
-						SaveLoad.Save();
-					}
-					this.roomFinishedLoadActive = true;
-					Globals.currentLevelName = Globals.instance.levelNames[Globals.currentLevelID];
-					this.nextRoomID = 1;
-				}
-				if (HardcoreArena.hardcoreModeActive)
-				{
-					if (this.nextRoomHasHardcoreVersion)
-					{
-						SceneManager.LoadScene(string.Concat(new object[]
-						{
-							Globals.currentLevelName,
-							"-",
-							this.nextRoomID,
-							"-HARDCORE"
-						}));
-					}
-					else
-					{
-						SceneManager.LoadScene(Globals.currentLevelName + "-" + this.nextRoomID);
-					}
-				}
-				else
-				{
-					SceneManager.LoadScene(Globals.currentLevelName + "-" + this.nextRoomID);
-				}
-				this.myState = Room.MyState.loading;
-				Globals.loadlessTimer.Stop();
-			}
-		}
+            if (HardcoreArena.hardcoreModeActive && Globals.currentLevelID == 7 && this.roomID == 4)
+            {
+                UnityEngine.Debug.Log("Unlocked final lava challenge");
+                if (!NewMenu.cheatsEnabled && Globals.save_progress < 20)
+                {
+                    Globals.save_progress = 20;
+                    SaveLoad.Save();
+                }
+            }
+            else if (HardcoreArena.hardcoreModeActive && Globals.currentLevelID == 15 && this.roomID == 4)
+            {
+                UnityEngine.Debug.Log("Completed final challenge");
+                if (!NewMenu.cheatsEnabled && Globals.save_progress < 21)
+                {
+                    Globals.save_progress = 21;
+                    SaveLoad.Save();
+                }
+            }
+            Globals.currentGlobalRoomID++;
+            this.nextRoomID = this.roomID + 1;
+            if (Globals.currentLevelID == 15 && this.roomID == 4)
+            {
+                Globals.currentLevelID++;
+                if (!NewMenu.cheatsEnabled && Globals.save_progress < Globals.currentLevelID)
+                {
+                    Globals.save_progress = Globals.currentLevelID;
+                    SaveLoad.Save();
+                }
+                if (!this.nextRoomHasHardcoreVersion)
+                {
+                    SceneManager.LoadScene("Final4-ENDING");
+                }
+                else
+                {
+                    Globals.currentLevelID = 19;
+                    SceneManager.LoadScene("Final4-ENDINGHARDCORE");
+                }
+                this.myState = Room.MyState.loading;
+                Globals.loadlessTimer.Stop();
+                return;
+            }
+            if (this.roomID == 4 && Globals.currentLevelID != 15)
+            {
+                Globals.currentLevelID++;
+                if (!NewMenu.cheatsEnabled && Globals.save_progress < Globals.currentLevelID)
+                {
+                    Globals.save_progress = Globals.currentLevelID;
+                    SaveLoad.Save();
+                }
+                this.roomFinishedLoadActive = true;
+                Globals.currentLevelName = Globals.instance.levelNames[Globals.currentLevelID];
+                this.nextRoomID = 1;
+            }
+            if (HardcoreArena.hardcoreModeActive)
+            {
+                if (this.nextRoomHasHardcoreVersion)
+                {
+                    SceneManager.LoadScene(string.Concat(new object[]
+                    {
+                        Globals.currentLevelName,
+                        "-",
+                        this.nextRoomID,
+                        "-HARDCORE"
+                    }));
+                }
+                else
+                {
+                    SceneManager.LoadScene(Globals.currentLevelName + "-" + this.nextRoomID);
+                }
+            }
+            else
+            {
+                SceneManager.LoadScene(Globals.currentLevelName + "-" + this.nextRoomID);
+            }
+            this.myState = Room.MyState.loading;
+            Globals.loadlessTimer.Stop();
+        }
 	}
 
     // Modified
