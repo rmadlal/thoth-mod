@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ExitFade : MonoBehaviour
 {
-	// New
-	private void OnApplicationQuit()
-	{
-		string[] array = File.ReadAllLines("settings.txt");
+    // New
+    private void OnApplicationQuit()
+    {
+        string[] array = File.ReadAllLines("settings.txt");
         array[8] = string.Join(",", new string[]
         {
             Screen.width.ToString(),
@@ -15,5 +15,5 @@ public class ExitFade : MonoBehaviour
             Screen.fullScreen.ToString()
         });
         File.WriteAllLines("settings.txt", array);
-	}
+    }
 }

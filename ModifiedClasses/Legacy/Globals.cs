@@ -7,34 +7,34 @@ using UnityEngine.SceneManagement;
 public class Globals : MonoBehaviour
 {
     // Modified
-	private void Awake()
-	{
-		Globals.instance = this;
-		if (Globals.currentLevelID == -1)
-		{
-			Globals.currentLevelID = 0;
-		}
-		Globals.timerGUIStyle = new GUIStyle();
-		Globals.timerGUIStyle.fontStyle = FontStyle.Bold;
-		Globals.timerGUIStyle.fontSize = 24;
-		Globals.timerGUIStyle.normal.textColor = Color.white;
-	}
+    private void Awake()
+    {
+        Globals.instance = this;
+        if (Globals.currentLevelID == -1)
+        {
+            Globals.currentLevelID = 0;
+        }
+        Globals.timerGUIStyle = new GUIStyle();
+        Globals.timerGUIStyle.fontStyle = FontStyle.Bold;
+        Globals.timerGUIStyle.fontSize = 24;
+        Globals.timerGUIStyle.normal.textColor = Color.white;
+    }
 
     // New
-	private void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.Escape) && (Globals.currentLevelID == 16 || Globals.currentLevelID == 18 || Globals.currentLevelID == 19 || (Globals.currentLevelID == 17 && ProceduralRoom.roomCounter == ProceduralRoom.roomCounterTarget)))
-		{
-			SceneManager.LoadScene("NewMenu");
-			GeneralSoundBank.GetInstance().StopEndGameTheme();
-			Globals.currentLevelID = -1;
-		}
-	}
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && (Globals.currentLevelID == 16 || Globals.currentLevelID == 18 || Globals.currentLevelID == 19 || (Globals.currentLevelID == 17 && ProceduralRoom.roomCounter == ProceduralRoom.roomCounterTarget)))
+        {
+            SceneManager.LoadScene("NewMenu");
+            GeneralSoundBank.GetInstance().StopEndGameTheme();
+            Globals.currentLevelID = -1;
+        }
+    }
 
     // New
-	private void OnGUI()
-	{
-		if (NewMenu.cheatsEnabled)
+    private void OnGUI()
+    {
+        if (NewMenu.cheatsEnabled)
         {
             Globals.timerGUIStyle.fontSize = 32;
             Globals.timerGUIStyle.alignment = TextAnchor.UpperCenter;
@@ -65,7 +65,7 @@ public class Globals : MonoBehaviour
                 GUI.Label(new Rect((float)Screen.width - 160f, 35f, 150f, 100f), Globals.FormatTime(Globals.prevRoomTime), Globals.timerGUIStyle);
             }
         }
-	}
+    }
 
     // New
     public static string FormatTime(TimeSpan ts)
@@ -87,26 +87,26 @@ public class Globals : MonoBehaviour
     }
 
     // New
-	public static Stopwatch inGameTime;
+    public static Stopwatch inGameTime;
 
     // New
-	public static TimeSpan prevRoomTime;
+    public static TimeSpan prevRoomTime;
 
     // New
-	public static GUIStyle timerGUIStyle;
+    public static GUIStyle timerGUIStyle;
 
     // New
-	public static bool showRealTimeAndILTime;
+    public static bool showRealTimeAndILTime;
 
     // New
-	public static Stopwatch realTimeTimer;
+    public static Stopwatch realTimeTimer;
 
     // New
-	public static bool showRoomDebugInfo;
+    public static bool showRoomDebugInfo;
 
     // New
-	public static bool warpedIntoRoom;
+    public static bool warpedIntoRoom;
 
     // New
-	public static Stopwatch loadlessTimer;
+    public static Stopwatch loadlessTimer;
 }
